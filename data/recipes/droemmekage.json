@@ -1,0 +1,51 @@
+{
+  "id": "droemmekage",
+  "title": "Drømmekage",
+  "subtitle": "Danish Dream Cake",
+  "category": "Cake",
+  "tabColor": "gold",
+  "image": "images/drommekage.png",
+  "servings": "8",
+  "prepTime": "20 min",
+  "restTime": "35 min bake",
+  "description": "A classic Danish sponge cake finished with a caramelized coconut and brown sugar topping, baked right on top of the cake until golden and bubbling.",
+  "sections": [
+    {
+      "name": "Sponge",
+      "ingredients": [
+        "2 cups all-purpose flour",
+        "2 tsp baking powder",
+        "3 large eggs",
+        "1 cup granulated sugar",
+        "⅔ cup whole milk",
+        "3½ tbsp unsalted butter",
+        "1 tsp vanilla extract",
+        "¼ tsp salt"
+      ],
+      "steps": [
+        "Preheat oven to 350°F. Grease and line a 9-inch springform pan.",
+        "Whisk flour, baking powder, and salt together; set aside.",
+        "Whisk eggs and sugar until pale and fluffy (3–4 min).",
+        "Gently heat milk and butter until melted; stir in vanilla.",
+        "Fold dry ingredients into egg mixture, then stir in warm milk mixture — don't overmix.",
+        "Pour into pan, bake 20 min (it'll be underdone — that's fine)."
+      ]
+    },
+    {
+      "name": "Coconut Topping & Assembly",
+      "ingredients": [
+        "7 tbsp unsalted butter",
+        "¾ cup + 2 tbsp light brown sugar",
+        "1⅓ cups shredded coconut",
+        "3 tbsp whole milk"
+      ],
+      "steps": [
+        "While the cake bakes, melt butter for the topping in a saucepan; stir in brown sugar, coconut, and milk. Cook 2–3 min until bubbly.",
+        "Spread the topping over the partially baked cake, return to oven for 15–20 min until golden and bubbling.",
+        "Cool 15–20 min in the pan before releasing. Serve warm or room temp."
+      ]
+    }
+  ],
+  "tip": "Watch the topping closely near the end — coconut burns fast.",
+  "source": ""
+}

@@ -1,0 +1,57 @@
+{
+  "id": "gammeldags-aeblekage",
+  "title": "Gammeldags Æblekage",
+  "subtitle": "Old-Fashioned Danish Apple Cake",
+  "category": "Dessert",
+  "tabColor": "rust",
+  "image": "images/aeblekage.jpg",
+  "servings": "2",
+  "prepTime": "15 min",
+  "restTime": "40 min",
+  "description": "A classic Danish coffee-table dessert made from apple compote and homemade buttered breadcrumb \"rasp,\" layered with whipped cream. A great way to use up stale bread, with a creamy, comforting texture — just like grandma used to make.",
+  "sections": [
+    {
+      "name": "Breadcrumb Rasp",
+      "ingredients": [
+        "4 slices day-old bread (white bread, pita, or toast bread)",
+        "1¾ oz (50 g) of the dried breadcrumbs, from above",
+        "1½ tbsp (20 g) butter",
+        "1½ tbsp (20 g) sugar"
+      ],
+      "steps": [
+        "Preheat the oven to 250°F (120°C).",
+        "Pulse the bread in a blender or food processor until finely crumbed (leave a bit coarser if you prefer more texture).",
+        "Spread the crumbs on a parchment-lined baking sheet. Dry in the oven for about 25–30 minutes, turning once or twice, until crisp. Let cool.",
+        "Melt the butter in a frying pan over medium heat. Add the dried crumbs and sugar, and toast gently, stirring, until golden and crisp. Set aside."
+      ]
+    },
+    {
+      "name": "Apple Compote",
+      "ingredients": [
+        "10½ oz (300 g) apples, peeled and cored (about 2 medium apples)",
+        "¼ cup + 1 tbsp (½ dl / 50 ml) water",
+        "1 tbsp lemon juice",
+        "1 tbsp sugar",
+        "1 tsp vanilla powder (or vanilla extract)"
+      ],
+      "steps": [
+        "Cut the apples into wedges, remove the core, then chop into rough cubes. Simmer in a pot with the water, sugar, lemon juice, and vanilla powder until soft.",
+        "Cover and let the compote simmer gently for 15–20 minutes, stirring occasionally. Let cool once soft."
+      ]
+    },
+    {
+      "name": "Whipped Cream & Assembly",
+      "ingredients": [
+        "¾ cup + 2 tbsp (2 dl / 200 ml) heavy whipping cream",
+        "10 almond macaroons, optional, for garnish"
+      ],
+      "steps": [
+        "Whip the cream to soft peaks.",
+        "Get out a few serving glasses. Layer apple compote, then buttered breadcrumb rasp, then a few crushed macaroons (optional). Repeat the layers.",
+        "Finish with whipped cream on top, just like a classic old-fashioned æblekage."
+      ]
+    }
+  ],
+  "tip": "It's the butter and sugar that turn plain toasted breadcrumbs into proper \"æblekage rasp.\" If you just dry the crumbs without them, you get an ordinary rasp for savory cooking instead — a good way to use up stale bread and keep it longer in a bag or airtight container.",
+  "source": "Adapted and translated from Valsemøllen (valsemollen.dk)"
+}
