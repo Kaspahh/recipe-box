@@ -34,24 +34,6 @@ python3 -m http.server 8000
 
 Then open `http://localhost:8000` in your browser.
 
-## Deploy it for free
-
-### Option A — GitHub Pages (recommended, no command line needed after setup)
-
-1. Create a new **public** repository on [github.com](https://github.com) (e.g. `recipe-box`).
-2. Upload this whole `recipe-site` folder's contents into the repo (drag-and-drop on the
-   "Add file → Upload files" page works fine).
-3. In the repo, go to **Settings → Pages**.
-4. Under "Build and deployment", set **Source** to `Deploy from a branch`, branch `main`, folder `/ (root)`.
-5. Save. After a minute your site is live at `https://<your-username>.github.io/recipe-box/`.
-
-### Option B — Netlify
-
-1. Go to [app.netlify.com](https://app.netlify.com) and sign in.
-2. Drag the `recipe-site` folder straight onto the "Sites" page (the "Deploy manually" drop zone).
-3. Netlify gives you a live URL immediately. You can rename it or attach your own domain
-   under Site settings.
-
 Both options are free for a personal site like this one.
 
 ## Adding a new recipe
@@ -84,13 +66,6 @@ Delete a recipe by removing its file from `data/recipes/` and its id from
 Drop the image file into the `images/` folder (upload it on GitHub.com the same way), then
 reference it as `images/your-file.jpg` in the recipe's `image` field.
 
-## Converting an existing recipe PDF
-
-There isn't a one-click "PDF → recipe card" converter here — PDFs are laid out for print,
-not for a responsive webpage, so the layout wouldn't translate cleanly. The fast path is to
-open the PDF, and copy the title, ingredients, and steps into the `add-recipe.html` form —
-that usually takes a couple of minutes per recipe and gives a much better-looking result than
-an automated conversion would.
 
 ## Customizing the look
 
