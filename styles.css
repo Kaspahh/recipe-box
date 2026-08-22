@@ -1,0 +1,572 @@
+/* ==========================================================================
+   Tokens
+   ========================================================================== */
+:root {
+  --ink: #2b2420;
+  --ink-soft: #5a4d43;
+  --cream: #efe6d0;
+  --card: #fffbf1;
+  --card-edge: #e7dcc0;
+  --walnut: #3d2a1f;
+  --walnut-deep: #2a1c14;
+  --rust: #a4491f;
+  --rust-deep: #7e3616;
+  --sage: #61715a;
+  --sage-deep: #4a5744;
+  --gold: #c98a2c;
+  --shadow: 0 1px 0 rgba(43, 36, 32, 0.04), 0 8px 20px -10px rgba(43, 36, 32, 0.35);
+
+  --font-display: "Fraunces", "Iowan Old Style", Georgia, serif;
+  --font-body: "Work Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: "Space Mono", "SFMono-Regular", Consolas, monospace;
+}
+
+* { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  color: var(--ink);
+  background:
+    radial-gradient(ellipse 900px 500px at 15% -10%, rgba(169, 143, 91, 0.10), transparent),
+    var(--cream);
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+
+/* subtle paper grain */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.5;
+  background-image:
+    linear-gradient(rgba(61,42,31,0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(61,42,31,0.015) 1px, transparent 1px);
+  background-size: 22px 22px;
+  z-index: 0;
+}
+
+a { color: inherit; text-decoration: none; }
+
+:focus-visible {
+  outline: 3px solid var(--gold);
+  outline-offset: 2px;
+}
+
+.wrap {
+  position: relative;
+  z-index: 1;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ==========================================================================
+   Header
+   ========================================================================== */
+.site-header {
+  padding: 56px 0 28px;
+  border-bottom: 3px double var(--card-edge);
+}
+
+.site-header .wrap {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.site-mark {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--rust);
+  margin: 0 0 10px;
+}
+
+.site-title {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-size: clamp(38px, 6vw, 58px);
+  line-height: 1.02;
+  margin: 0;
+  color: var(--walnut-deep);
+}
+
+.site-title em {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--rust);
+}
+
+.site-tagline {
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--ink-soft);
+  max-width: 34ch;
+  margin: 10px 0 0;
+}
+
+.new-recipe-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--card);
+  background: var(--walnut);
+  border: none;
+  border-radius: 3px;
+  padding: 12px 18px;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+.new-recipe-btn:hover { background: var(--rust-deep); transform: translateY(-1px); }
+
+/* ==========================================================================
+   Recipe box / index grid
+   ========================================================================== */
+.box {
+  padding: 44px 0 90px;
+}
+
+.box-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin: 0 0 22px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.box-label::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--card-edge);
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 26px 22px;
+}
+
+/* index card */
+.recipe-card {
+  position: relative;
+  background: var(--card);
+  border: 1px solid var(--card-edge);
+  border-radius: 3px;
+  padding: 22px 20px 20px;
+  box-shadow: var(--shadow);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+  display: block;
+}
+.recipe-card:hover {
+  transform: translateY(-3px) rotate(-0.4deg);
+  box-shadow: 0 1px 0 rgba(43,36,32,0.05), 0 16px 30px -12px rgba(43,36,32,0.4);
+}
+
+/* catalog tab */
+.recipe-card .tab {
+  position: absolute;
+  top: -11px;
+  left: 20px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #fff;
+  background: var(--rust);
+  padding: 4px 10px;
+  border-radius: 2px;
+  box-shadow: 0 2px 6px rgba(43,36,32,0.25);
+}
+.recipe-card.tab-sage .tab { background: var(--sage-deep); }
+.recipe-card.tab-gold .tab { background: var(--gold); }
+.recipe-card.tab-rust .tab { background: var(--rust); }
+
+.recipe-card .thumb {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 2px;
+  margin-bottom: 14px;
+  filter: saturate(0.96);
+  display: block;
+  background: var(--cream);
+}
+
+.recipe-card h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 21px;
+  margin: 0 0 3px;
+  color: var(--walnut-deep);
+}
+
+.recipe-card .sub {
+  font-size: 13px;
+  color: var(--ink-soft);
+  font-style: italic;
+  margin: 0 0 12px;
+}
+
+.recipe-card .meta {
+  display: flex;
+  gap: 14px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-soft);
+  border-top: 1px dashed var(--card-edge);
+  padding-top: 10px;
+}
+
+.empty-state {
+  border: 1.5px dashed var(--card-edge);
+  border-radius: 4px;
+  padding: 60px 24px;
+  text-align: center;
+  color: var(--ink-soft);
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+
+/* ==========================================================================
+   Recipe detail page
+   ========================================================================== */
+.detail-card {
+  background: var(--card);
+  border: 1px solid var(--card-edge);
+  border-radius: 4px;
+  box-shadow: var(--shadow);
+  padding: 0;
+  overflow: hidden;
+  margin: 40px 0 80px;
+}
+
+.detail-hero {
+  position: relative;
+}
+
+.detail-hero img {
+  width: 100%;
+  max-height: 420px;
+  object-fit: cover;
+  display: block;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--rust);
+  margin: 34px 0 0;
+}
+.back-link:hover { text-decoration: underline; }
+
+.detail-body {
+  padding: 34px 40px 44px;
+}
+
+.detail-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--rust);
+  margin: 0 0 8px;
+}
+
+.detail-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(30px, 4.4vw, 44px);
+  color: var(--walnut-deep);
+  margin: 0 0 4px;
+  line-height: 1.05;
+}
+
+.detail-sub {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 18px;
+  color: var(--ink-soft);
+  margin: 0 0 20px;
+}
+
+.detail-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 22px;
+}
+.detail-meta span {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.03em;
+  color: var(--walnut);
+  background: var(--cream);
+  border: 1px solid var(--card-edge);
+  border-radius: 20px;
+  padding: 5px 12px;
+}
+
+.detail-desc {
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--ink-soft);
+  max-width: 62ch;
+  margin: 0 0 8px;
+}
+
+hr.divider {
+  border: none;
+  border-top: 3px double var(--card-edge);
+  margin: 34px 0;
+}
+
+.section-block {
+  margin-bottom: 34px;
+}
+
+.section-number {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--rust);
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 24px;
+  color: var(--walnut-deep);
+  margin: 2px 0 16px;
+}
+
+.section-columns {
+  display: grid;
+  grid-template-columns: 1.1fr 1.6fr;
+  gap: 32px;
+}
+
+@media (max-width: 720px) {
+  .section-columns { grid-template-columns: 1fr; }
+  .detail-body { padding: 28px 22px 36px; }
+}
+
+.ingredient-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-mono);
+  font-size: 13.5px;
+  line-height: 1.9;
+  color: var(--ink);
+  border-left: 2px solid var(--card-edge);
+  padding-left: 16px;
+}
+.ingredient-list li::before {
+  content: "– ";
+  color: var(--rust);
+}
+
+.step-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  counter-reset: step;
+}
+.step-list li {
+  counter-increment: step;
+  position: relative;
+  padding-left: 40px;
+  margin-bottom: 16px;
+  font-size: 15.5px;
+  line-height: 1.65;
+  color: var(--ink);
+}
+.step-list li::before {
+  content: counter(step);
+  position: absolute;
+  left: 0;
+  top: -1px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--walnut);
+  color: var(--card);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tip-block {
+  background: var(--cream);
+  border: 1px dashed var(--card-edge);
+  border-radius: 4px;
+  padding: 18px 22px;
+  font-size: 14px;
+  color: var(--ink-soft);
+  line-height: 1.6;
+}
+.tip-block strong {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--rust);
+  display: block;
+  margin-bottom: 8px;
+}
+
+.source-note {
+  margin-top: 24px;
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  font-style: italic;
+}
+
+/* ==========================================================================
+   Add-recipe form
+   ========================================================================== */
+.form-card {
+  background: var(--card);
+  border: 1px solid var(--card-edge);
+  border-radius: 4px;
+  box-shadow: var(--shadow);
+  padding: 34px 36px 40px;
+  margin: 36px 0 60px;
+}
+
+.form-intro {
+  font-size: 14.5px;
+  color: var(--ink-soft);
+  line-height: 1.6;
+  max-width: 68ch;
+  margin: 0 0 26px;
+  padding-bottom: 22px;
+  border-bottom: 1px dashed var(--card-edge);
+}
+.form-intro code {
+  font-family: var(--font-mono);
+  background: var(--cream);
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 13px;
+}
+
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+@media (max-width: 640px) { .field-row { grid-template-columns: 1fr; } }
+
+label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: 6px;
+}
+
+input[type="text"], textarea, select {
+  width: 100%;
+  font-family: var(--font-body);
+  font-size: 14.5px;
+  color: var(--ink);
+  background: #fff;
+  border: 1px solid var(--card-edge);
+  border-radius: 3px;
+  padding: 10px 12px;
+  margin-bottom: 16px;
+}
+textarea { resize: vertical; min-height: 78px; font-family: var(--font-mono); font-size: 13px; line-height: 1.6; }
+
+.section-fieldset {
+  border: 1px solid var(--card-edge);
+  border-radius: 4px;
+  padding: 18px 20px 6px;
+  margin-bottom: 20px;
+  background: rgba(239, 230, 208, 0.35);
+}
+.section-fieldset legend {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--rust);
+  padding: 0 6px;
+}
+
+.btn-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.btn {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border-radius: 3px;
+  padding: 12px 18px;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+.btn-primary { background: var(--walnut); color: var(--card); border: none; }
+.btn-primary:hover { background: var(--rust-deep); }
+.btn-secondary { background: transparent; color: var(--walnut); border: 1px solid var(--card-edge); }
+.btn-secondary:hover { border-color: var(--walnut); }
+
+.output-block {
+  margin-top: 26px;
+}
+.output-block textarea {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  min-height: 220px;
+  background: var(--walnut-deep);
+  color: #f3ead4;
+  border: none;
+}
+
+/* ==========================================================================
+   Footer
+   ========================================================================== */
+.site-footer {
+  padding: 28px 0 60px;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-soft);
+  letter-spacing: 0.04em;
+}

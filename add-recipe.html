@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Add a recipe — The Recipe Box</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;1,400&family=Work+Sans:wght@400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <div>
+      <p class="site-mark">est. this kitchen</p>
+      <h1 class="site-title">The Recipe <em>Box</em></h1>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <a class="back-link" href="index.html">&larr; Back to the box</a>
+
+  <div class="form-card">
+    <p class="form-intro">
+      This site has no server, so there's no live "upload" button — instead, this form writes
+      the recipe card for you. Fill it in and click <strong>Generate JSON</strong>. You'll get
+      two things to add on GitHub.com: a new file to create under <code>data/recipes/</code>,
+      and one line to add to <code>data/manifest.json</code>. The new card appears next time
+      the page loads.
+    </p>
+
+    <div class="field-row">
+      <div>
+        <label for="title">Title</label>
+        <input type="text" id="title" placeholder="Gammeldags Æblekage">
+      </div>
+      <div>
+        <label for="subtitle">Subtitle</label>
+        <input type="text" id="subtitle" placeholder="Old-Fashioned Danish Apple Cake">
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div>
+        <label for="category">Category (also used as the card's tab label)</label>
+        <input type="text" id="category" placeholder="Dessert">
+      </div>
+      <div>
+        <label for="image">Image path (add the photo into /images first)</label>
+        <input type="text" id="image" placeholder="images/my-photo.jpg">
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div>
+        <label for="servings">Servings</label>
+        <input type="text" id="servings" placeholder="4">
+      </div>
+      <div>
+        <label for="prepTime">Prep time</label>
+        <input type="text" id="prepTime" placeholder="15 min">
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div>
+        <label for="restTime">Rest / cook time</label>
+        <input type="text" id="restTime" placeholder="40 min">
+      </div>
+      <div>
+        <label for="tabColor">Tab color</label>
+        <select id="tabColor">
+          <option value="rust">Rust</option>
+          <option value="sage">Sage</option>
+          <option value="gold">Gold</option>
+        </select>
+      </div>
+    </div>
+
+    <label for="description">Short description</label>
+    <textarea id="description" placeholder="A couple of sentences about the dish."></textarea>
+
+    <div id="sections-wrap"></div>
+
+    <div class="btn-row" style="margin-bottom: 24px;">
+      <button type="button" class="btn btn-secondary" id="add-section-btn">+ Add another section</button>
+    </div>
+
+    <label for="tip">Tip (optional)</label>
+    <textarea id="tip" placeholder="Any extra advice worth passing on."></textarea>
+
+    <label for="source">Source note (optional)</label>
+    <input type="text" id="source" placeholder="Adapted from...">
+
+    <div class="btn-row">
+      <button type="button" class="btn btn-primary" id="generate-btn">Generate JSON</button>
+      <button type="button" class="btn btn-secondary" id="copy-btn">Copy to clipboard</button>
+    </div>
+
+    <div class="output-block">
+      <label for="filename-hint">Step 1 — create this new file</label>
+      <input type="text" id="filename-hint" readonly>
+
+      <label for="output" style="margin-top: 4px;">Step 2 — paste this as that file's entire contents</label>
+      <textarea id="output" readonly placeholder="Your generated recipe JSON will appear here."></textarea>
+
+      <label for="manifest-line" style="margin-top: 4px;">Step 3 — add this id to data/manifest.json</label>
+      <input type="text" id="manifest-line" readonly>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">Kept card by card, recipe by recipe.</div>
+</footer>
+
+<script>
+let sectionCount = 0;
+
+function addSection(name = "", ingredients = "", steps = "") {
+  sectionCount++;
+  const wrap = document.getElementById("sections-wrap");
+  const fieldset = document.createElement("fieldset");
+  fieldset.className = "section-fieldset";
+  fieldset.dataset.section = sectionCount;
+  fieldset.innerHTML = `
+    <legend>Section ${sectionCount}</legend>
+    <label>Section name</label>
+    <input type="text" class="sec-name" value="${name}" placeholder="e.g. Apple Compote">
+    <label>Ingredients (one per line)</label>
+    <textarea class="sec-ingredients" placeholder="10½ oz apples, peeled and cored&#10;1 tbsp lemon juice">${ingredients}</textarea>
+    <label>Steps (one per line)</label>
+    <textarea class="sec-steps" placeholder="Simmer the apples until soft.&#10;Let cool.">${steps}</textarea>
+    <div class="btn-row" style="margin-bottom: 18px;">
+      <button type="button" class="btn btn-secondary remove-section-btn">Remove this section</button>
+    </div>
+  `;
+  fieldset.querySelector(".remove-section-btn").addEventListener("click", () => fieldset.remove());
+  wrap.appendChild(fieldset);
+}
+
+document.getElementById("add-section-btn").addEventListener("click", () => addSection());
+addSection(); // start with one section
+
+function slugify(str) {
+  return str
+    .toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // strip accents
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+}
+
+document.getElementById("generate-btn").addEventListener("click", () => {
+  const title = document.getElementById("title").value.trim();
+  if (!title) { alert("Give the recipe a title first."); return; }
+
+  const sections = Array.from(document.querySelectorAll(".section-fieldset")).map(fs => ({
+    name: fs.querySelector(".sec-name").value.trim(),
+    ingredients: fs.querySelector(".sec-ingredients").value.split("\n").map(s => s.trim()).filter(Boolean),
+    steps: fs.querySelector(".sec-steps").value.split("\n").map(s => s.trim()).filter(Boolean),
+  })).filter(s => s.name);
+
+  const recipe = {
+    id: slugify(title),
+    title,
+    subtitle: document.getElementById("subtitle").value.trim(),
+    category: document.getElementById("category").value.trim() || "Recipe",
+    tabColor: document.getElementById("tabColor").value,
+    image: document.getElementById("image").value.trim(),
+    servings: document.getElementById("servings").value.trim(),
+    prepTime: document.getElementById("prepTime").value.trim(),
+    restTime: document.getElementById("restTime").value.trim(),
+    description: document.getElementById("description").value.trim(),
+    sections,
+    tip: document.getElementById("tip").value.trim(),
+    source: document.getElementById("source").value.trim(),
+  };
+
+  document.getElementById("filename-hint").value = `data/recipes/${recipe.id}.json`;
+  document.getElementById("output").value = JSON.stringify(recipe, null, 2);
+  document.getElementById("manifest-line").value = `"${recipe.id}"`;
+});
+
+document.getElementById("copy-btn").addEventListener("click", () => {
+  const output = document.getElementById("output");
+  if (!output.value) { alert("Generate the JSON first."); return; }
+  output.select();
+  navigator.clipboard.writeText(output.value).then(() => {
+    const btn = document.getElementById("copy-btn");
+    const original = btn.textContent;
+    btn.textContent = "Copied!";
+    setTimeout(() => (btn.textContent = original), 1500);
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The Recipe Box</title>
+<meta name="description" content="A personal collection of recipes." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;1,400&family=Work+Sans:wght@400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <div>
+      <p class="site-mark">est. this kitchen</p>
+      <h1 class="site-title">The Recipe <em>Box</em></h1>
+      <p class="site-tagline">A running collection of dishes worth making again.</p>
+    </div>
+  </div>
+</header>
+
+<main class="box">
+  <div class="wrap">
+    <p class="box-label">All recipes</p>
+    <div class="card-grid" id="card-grid">
+      <!-- cards injected by script.js -->
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">Kept card by card, recipe by recipe.</div>
+</footer>
+
+<script src="script.js"></script>
+<script>
+  loadRecipes().then(renderCardGrid);
+</script>
+</body>
+</html>

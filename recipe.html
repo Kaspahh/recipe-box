@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Recipe — The Recipe Box</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;1,400&family=Work+Sans:wght@400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <div>
+      <p class="site-mark">est. this kitchen</p>
+      <h1 class="site-title">The Recipe <em>Box</em></h1>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <a class="back-link" href="index.html">&larr; Back to the box</a>
+  <div id="detail-root"></div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">Kept card by card, recipe by recipe.</div>
+</footer>
+
+<script src="script.js"></script>
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get("id");
+  loadRecipes().then(recipes => {
+    const recipe = recipes.find(r => r.id === id);
+    renderDetail(recipe);
+  });
+</script>
+</body>
+</html>
