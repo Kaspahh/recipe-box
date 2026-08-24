@@ -24,7 +24,10 @@
 
 <main class="box">
   <div class="wrap">
-    <p class="box-label">All recipes</p>
+    <div class="filter-bar" id="filter-bar">
+      <!-- category pills injected by script.js -->
+    </div>
+    <p class="box-label" id="box-label">All recipes</p>
     <div class="card-grid" id="card-grid">
       <!-- cards injected by script.js -->
     </div>
@@ -37,7 +40,10 @@
 
 <script src="script.js"></script>
 <script>
-  loadRecipes().then(renderCardGrid);
+  loadRecipes().then(recipes => {
+    renderCategoryFilter(recipes);
+    renderCardGrid(recipes);
+  });
 </script>
 </body>
 </html>

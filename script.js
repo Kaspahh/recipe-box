@@ -49,7 +49,7 @@ function renderCardGrid(recipes) {
   if (!recipes.length) {
     grid.innerHTML = `
       <div class="empty-state">
-        The box is empty.<br>Use "+ Add a recipe" to write your first card.
+        No recipes here yet.
       </div>`;
     return;
   }
@@ -66,6 +66,52 @@ function renderCardGrid(recipes) {
       </div>
     </a>
   `).join("");
+}
+
+function renderCategoryFilter(allRecipes) {
+  const bar = document.getElementById("filter-bar");
+  const label = document.getElementById("box-label");
+  if (!bar) return; // recipe.html and add-recipe.html don't have a filter bar
+
+  if (!allRecipes.length) {
+    bar.innerHTML = "";
+    return;
+  }
+
+  // Unique categories, in first-seen order, each tagged with the same
+  // tab color its cards use so the pill matches the card accent.
+  const seen = new Map();
+  allRecipes.forEach((r, i) => {
+    const cat = r.category || "Recipe";
+    if (!seen.has(cat)) seen.set(cat, tabClassFor(r, i));
+  });
+  const categories = Array.from(seen.entries());
+
+  const pillHtml = (name, cssClass, active) => `
+    <button type="button" class="filter-pill ${cssClass} ${active ? "active" : ""}" data-category="${escapeHtml(name)}">
+      ${escapeHtml(name)}
+    </button>`;
+
+  bar.innerHTML =
+    pillHtml("All", "", true) +
+    categories.map(([name, cssClass]) => pillHtml(name, cssClass, false)).join("");
+
+  bar.querySelectorAll(".filter-pill").forEach(pill => {
+    pill.addEventListener("click", () => {
+      bar.querySelectorAll(".filter-pill").forEach(p => p.classList.remove("active"));
+      pill.classList.add("active");
+
+      const category = pill.dataset.category;
+      if (category === "All") {
+        renderCardGrid(allRecipes);
+        label.textContent = "All recipes";
+      } else {
+        const filtered = allRecipes.filter(r => (r.category || "Recipe") === category);
+        renderCardGrid(filtered);
+        label.textContent = category;
+      }
+    });
+  });
 }
 
 function renderDetail(recipe) {

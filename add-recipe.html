@@ -46,7 +46,8 @@
     <div class="field-row">
       <div>
         <label for="category">Category (also used as the card's tab label)</label>
-        <input type="text" id="category" placeholder="Dessert">
+        <input type="text" id="category" list="category-suggestions" placeholder="Dessert">
+        <datalist id="category-suggestions"></datalist>
       </div>
       <div>
         <label for="image">Image path (add the photo into /images first)</label>
@@ -118,8 +119,18 @@
   <div class="wrap">Kept card by card, recipe by recipe.</div>
 </footer>
 
+<script src="script.js"></script>
 <script>
 let sectionCount = 0;
+
+// Populate the category datalist with whatever categories already exist,
+// so new recipes stay consistent (e.g. reuse "Dessert" instead of creating
+// a near-duplicate "Desserts").
+loadRecipes().then(recipes => {
+  const categories = [...new Set(recipes.map(r => r.category).filter(Boolean))];
+  const datalist = document.getElementById("category-suggestions");
+  datalist.innerHTML = categories.map(c => `<option value="${c}">`).join("");
+});
 
 function addSection(name = "", ingredients = "", steps = "") {
   sectionCount++;
