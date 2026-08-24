@@ -1,0 +1,44 @@
+{
+  "id": "chili-con-carne-with-rice",
+  "title": "Chili Con Carne (With Rice)",
+  "subtitle": "Easy, Delicious Chili with Beef",
+  "category": "Dinner",
+  "tabColor": "rust",
+  "image": "",
+  "servings": "5",
+  "prepTime": "20 min",
+  "restTime": "1 hr 30 min",
+  "description": "A yummy comfort food. Chili made with ground beef, warm spices, tomatoes, and kidney beans. Great served with rice.",
+  "sections": [
+    {
+      "name": "Chili",
+      "ingredients": [
+        "2 tbsp olive oil",
+        "2 lbs ground beef",
+        "1 large onion, chopped",
+        "4 cloves garlic, chopped",
+        "2 tbsp ground cumin",
+        "2 tbsp dried oregano",
+        "1 tsp cinnamon powder (trust me)",
+        "2 tsp smoked paprika",
+        "½ tsp cayenne pepper",
+        "2 tbsp tomato paste",
+        "28 oz can crushed tomatoes",
+        "½ cup beef stock (or beef bouillon dissolved in hot water)",
+        "14.5 oz can kidney beans, drained",
+        "salt and pepper, to taste"
+      ],
+      "steps": [
+        "Heat the olive oil in a large pan over medium heat.",
+        "Add the onions and sauté until lightly golden, 2 to 3 minutes.",
+        "Add the garlic and fry another minute.",
+        "Add the ground beef; fry until fully cooked and no pink shows at all in the meat (about 8 minutes).",
+        "Add the cumin, cinnamon powder, oregano, paprika, cayenne pepper, and tomato paste and cook, stirring, about 2 minutes.",
+        "Add the tomatoes, beef stock, and beans. Season to taste with salt and pepper, stir in the parsley, and bring to a simmer over low heat.",
+        "Slowly cook, stirring occasionally, until the chili thickens slightly, about 1–1½ hours. (longer cooking time = better flavor)"
+      ]
+    }
+  ],
+  "tip": "If you like spicy, add more cayenne pepper :-)",
+  "source": ""
+}
