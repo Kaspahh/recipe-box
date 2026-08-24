@@ -26,10 +26,10 @@
   <div class="form-card">
     <p class="form-intro">
       This site has no server, so there's no live "upload" button — instead, this form writes
-      the recipe card for you. Fill it in and click <strong>Generate JSON</strong>. You'll get
-      two things to add on GitHub.com: a new file to create under <code>data/recipes/</code>,
-      and one line to add to <code>data/manifest.json</code>. The new card appears next time
-      the page loads.
+      the recipe file for you. Fill it in, click <strong>Generate</strong>, then
+      <strong>Download JSON File</strong> — it saves correctly named and ready to drag into
+      <code>data/recipes/</code> on GitHub.com. Just add its id to <code>data/manifest.json</code>
+      afterward and the new card appears next time the page loads.
     </p>
 
     <div class="field-row">
@@ -96,18 +96,19 @@
     <input type="text" id="source" placeholder="Adapted from...">
 
     <div class="btn-row">
-      <button type="button" class="btn btn-primary" id="generate-btn">Generate JSON</button>
+      <button type="button" class="btn btn-primary" id="generate-btn">Generate</button>
+      <button type="button" class="btn btn-primary" id="download-btn">Download JSON File</button>
       <button type="button" class="btn btn-secondary" id="copy-btn">Copy to clipboard</button>
     </div>
 
     <div class="output-block">
-      <label for="filename-hint">Step 1 — create this new file</label>
+      <label for="filename-hint">This will download as</label>
       <input type="text" id="filename-hint" readonly>
 
-      <label for="output" style="margin-top: 4px;">Step 2 — paste this as that file's entire contents</label>
-      <textarea id="output" readonly placeholder="Your generated recipe JSON will appear here."></textarea>
+      <label for="output" style="margin-top: 4px;">File contents (for reference, or to copy manually)</label>
+      <textarea id="output" readonly placeholder="Click Generate to preview the recipe JSON."></textarea>
 
-      <label for="manifest-line" style="margin-top: 4px;">Step 3 — add this id to data/manifest.json</label>
+      <label for="manifest-line" style="margin-top: 4px;">After uploading the file, add this id to data/manifest.json</label>
       <input type="text" id="manifest-line" readonly>
     </div>
   </div>
@@ -153,9 +154,9 @@ function slugify(str) {
     .replace(/(^-|-$)/g, "");
 }
 
-document.getElementById("generate-btn").addEventListener("click", () => {
+function buildRecipeObject() {
   const title = document.getElementById("title").value.trim();
-  if (!title) { alert("Give the recipe a title first."); return; }
+  if (!title) { alert("Give the recipe a title first."); return null; }
 
   const sections = Array.from(document.querySelectorAll(".section-fieldset")).map(fs => ({
     name: fs.querySelector(".sec-name").value.trim(),
@@ -163,7 +164,7 @@ document.getElementById("generate-btn").addEventListener("click", () => {
     steps: fs.querySelector(".sec-steps").value.split("\n").map(s => s.trim()).filter(Boolean),
   })).filter(s => s.name);
 
-  const recipe = {
+  return {
     id: slugify(title),
     title,
     subtitle: document.getElementById("subtitle").value.trim(),
@@ -178,15 +179,42 @@ document.getElementById("generate-btn").addEventListener("click", () => {
     tip: document.getElementById("tip").value.trim(),
     source: document.getElementById("source").value.trim(),
   };
+}
 
-  document.getElementById("filename-hint").value = `data/recipes/${recipe.id}.json`;
+document.getElementById("generate-btn").addEventListener("click", () => {
+  const recipe = buildRecipeObject();
+  if (!recipe) return;
+
+  document.getElementById("filename-hint").value = `${recipe.id}.json`;
   document.getElementById("output").value = JSON.stringify(recipe, null, 2);
   document.getElementById("manifest-line").value = `"${recipe.id}"`;
 });
 
+document.getElementById("download-btn").addEventListener("click", () => {
+  const recipe = buildRecipeObject();
+  if (!recipe) return;
+
+  // Keep the preview fields in sync too, in case Generate wasn't clicked first
+  document.getElementById("filename-hint").value = `${recipe.id}.json`;
+  document.getElementById("output").value = JSON.stringify(recipe, null, 2);
+  document.getElementById("manifest-line").value = `"${recipe.id}"`;
+
+  const json = JSON.stringify(recipe, null, 2);
+  const blob = new Blob([json], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `${recipe.id}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+});
+
 document.getElementById("copy-btn").addEventListener("click", () => {
   const output = document.getElementById("output");
-  if (!output.value) { alert("Generate the JSON first."); return; }
+  if (!output.value) { alert("Click Generate first."); return; }
   output.select();
   navigator.clipboard.writeText(output.value).then(() => {
     const btn = document.getElementById("copy-btn");
