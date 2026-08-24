@@ -6,14 +6,14 @@
 // ---------------------------------------------------------------------
 async function loadRecipes() {
   try {
-    const manifestRes = await fetch("data/manifest.json");
+    const manifestRes = await fetch("data/manifest.json", { cache: "no-store" });
     if (!manifestRes.ok) throw new Error("Failed to load manifest.json");
     const ids = await manifestRes.json();
 
     const recipes = await Promise.all(
       ids.map(async id => {
         try {
-          const res = await fetch(`data/recipes/${id}.json`);
+          const res = await fetch(`data/recipes/${id}.json`, { cache: "no-store" });
           if (!res.ok) throw new Error(`Failed to load recipe: ${id}`);
           return await res.json();
         } catch (err) {
