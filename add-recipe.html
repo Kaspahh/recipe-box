@@ -7,7 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;1,400&family=Work+Sans:wght@400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="styles.css?v=1">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 </head>
 <body>
 
@@ -26,10 +27,10 @@
   <div class="form-card">
     <p class="form-intro">
       This site has no server, so there's no live "upload" button — instead, this form writes
-      the recipe file for you. Fill it in, click <strong>Generate</strong>, then
-      <strong>Download JSON File</strong> — it saves correctly named and ready to drag into
-      <code>data/recipes/</code> on GitHub.com. Just add its id to <code>data/manifest.json</code>
-      afterward and the new card appears next time the page loads.
+      the recipe file for you. Fill it in — optionally attaching a photo below — click
+      <strong>Generate</strong>, then <strong>Download ZIP</strong>. It bundles the new recipe
+      file, an already-updated <code>manifest.json</code>, and your photo (if you added one),
+      all in the right folder structure, ready to upload straight into your repo on GitHub.com.
     </p>
 
     <div class="field-row">
@@ -50,8 +51,16 @@
         <datalist id="category-suggestions"></datalist>
       </div>
       <div>
-        <label for="image">Image path (add the photo into /images first)</label>
+        <label for="image">Image path (auto-filled if you upload a photo below)</label>
         <input type="text" id="image" placeholder="images/my-photo.jpg">
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div>
+        <label for="image-upload">Or upload a photo — it's bundled into the ZIP automatically</label>
+        <input type="file" id="image-upload" accept="image/*">
+        <p id="image-upload-hint" style="font-size: 12px; color: var(--ink-soft); margin: -10px 0 16px;"></p>
       </div>
     </div>
 
@@ -98,9 +107,12 @@
 
     <div class="btn-row">
       <button type="button" class="btn btn-primary" id="generate-btn">Generate</button>
-      <button type="button" class="btn btn-primary" id="download-btn">Download JSON File</button>
+      <button type="button" class="btn btn-primary" id="download-zip-btn">Download ZIP (recipe + updated manifest)</button>
+      <button type="button" class="btn btn-secondary" id="download-btn">Download JSON only</button>
       <button type="button" class="btn btn-secondary" id="copy-btn">Copy to clipboard</button>
     </div>
+
+    <p id="zip-status" style="font-size: 12.5px; color: var(--ink-soft); margin-top: 10px;"></p>
 
     <div class="output-block">
       <label for="filename-hint">This will download as</label>
@@ -109,7 +121,7 @@
       <label for="output" style="margin-top: 4px;">File contents (for reference, or to copy manually)</label>
       <textarea id="output" readonly placeholder="Click Generate to preview the recipe JSON."></textarea>
 
-      <label for="manifest-line" style="margin-top: 4px;">After uploading the file, add this id to data/manifest.json</label>
+      <label for="manifest-line" style="margin-top: 4px;">If not using the ZIP: manually add this id to data/manifest.json</label>
       <input type="text" id="manifest-line" readonly>
     </div>
   </div>
@@ -119,7 +131,7 @@
   <div class="wrap">Kept card by card, recipe by recipe.</div>
 </footer>
 
-<script src="script.js"></script>
+<script src="script.js?v=1"></script>
 <script>
 let sectionCount = 0;
 
@@ -157,6 +169,15 @@ function addSection(name = "", ingredients = "", steps = "") {
 document.getElementById("add-section-btn").addEventListener("click", () => addSection());
 addSection(); // start with one section
 
+let selectedImageFile = null;
+document.getElementById("image-upload").addEventListener("change", (e) => {
+  selectedImageFile = e.target.files[0] || null;
+  const hint = document.getElementById("image-upload-hint");
+  hint.textContent = selectedImageFile
+    ? `Selected: ${selectedImageFile.name} (will be renamed to match the recipe id)`
+    : "";
+});
+
 function slugify(str) {
   return str
     .toLowerCase()
@@ -165,9 +186,19 @@ function slugify(str) {
     .replace(/(^-|-$)/g, "");
 }
 
+function getImagePath(recipeId) {
+  if (selectedImageFile) {
+    const parts = selectedImageFile.name.split(".");
+    const ext = parts.length > 1 ? parts.pop().toLowerCase() : "jpg";
+    return `images/${recipeId}.${ext}`;
+  }
+  return document.getElementById("image").value.trim();
+}
+
 function buildRecipeObject() {
   const title = document.getElementById("title").value.trim();
   if (!title) { alert("Give the recipe a title first."); return null; }
+  const id = slugify(title);
 
   const sections = Array.from(document.querySelectorAll(".section-fieldset")).map(fs => ({
     name: fs.querySelector(".sec-name").value.trim(),
@@ -176,12 +207,12 @@ function buildRecipeObject() {
   })).filter(s => s.name);
 
   return {
-    id: slugify(title),
+    id,
     title,
     subtitle: document.getElementById("subtitle").value.trim(),
     category: document.getElementById("category").value.trim() || "Recipe",
     tabColor: document.getElementById("tabColor").value,
-    image: document.getElementById("image").value.trim(),
+    image: getImagePath(id),
     servings: document.getElementById("servings").value.trim(),
     prepTime: document.getElementById("prepTime").value.trim(),
     restTime: document.getElementById("restTime").value.trim(),
@@ -221,6 +252,10 @@ document.getElementById("download-btn").addEventListener("click", () => {
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
+
+  if (selectedImageFile) {
+    alert(`Don't forget: this download doesn't include the photo. Upload it separately as ${recipe.image}, or use "Download ZIP" instead to bundle everything together.`);
+  }
 });
 
 document.getElementById("copy-btn").addEventListener("click", () => {
@@ -233,6 +268,68 @@ document.getElementById("copy-btn").addEventListener("click", () => {
     btn.textContent = "Copied!";
     setTimeout(() => (btn.textContent = original), 1500);
   });
+});
+
+document.getElementById("download-zip-btn").addEventListener("click", async () => {
+  const recipe = buildRecipeObject();
+  if (!recipe) return;
+
+  // Keep the preview fields in sync too
+  document.getElementById("filename-hint").value = `${recipe.id}.json`;
+  document.getElementById("output").value = JSON.stringify(recipe, null, 2);
+  document.getElementById("manifest-line").value = `"${recipe.id}"`;
+
+  const statusEl = document.getElementById("zip-status");
+  const btn = document.getElementById("download-zip-btn");
+  const originalLabel = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = "Building ZIP…";
+  statusEl.textContent = "Fetching the current manifest from your live site…";
+
+  try {
+    // Fetch the live manifest so the bundled copy reflects what's
+    // actually deployed, not just what this browser happens to have cached.
+    const res = await fetch("data/manifest.json", { cache: "no-store" });
+    if (!res.ok) throw new Error("manifest.json not reachable");
+    let manifest = await res.json();
+
+    if (!manifest.includes(recipe.id)) {
+      manifest = [...manifest, recipe.id];
+    } // if the id already exists, this is an edit — manifest doesn't need changing
+
+    const zip = new JSZip();
+    zip.file(`data/recipes/${recipe.id}.json`, JSON.stringify(recipe, null, 2));
+    zip.file("data/manifest.json", JSON.stringify(manifest, null, 2));
+
+    if (selectedImageFile) {
+      statusEl.textContent = "Adding photo to the ZIP…";
+      const imageBytes = await selectedImageFile.arrayBuffer();
+      zip.file(recipe.image, imageBytes); // recipe.image is already "images/<id>.<ext>"
+    }
+
+    const blob = await zip.generateAsync({ type: "blob" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${recipe.id}-update.zip`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    const imageNote = selectedImageFile
+      ? ` and ${recipe.image}`
+      : "";
+    statusEl.textContent = "Downloaded. Unzip it, then upload data/recipes/" + recipe.id +
+      ".json, data/manifest.json," + imageNote + " into their matching folders on GitHub — manifest.json will overwrite the old one with the new id already added.";
+  } catch (err) {
+    console.error(err);
+    statusEl.textContent = "Couldn't fetch the live manifest (site may not be deployed yet, or is unreachable). " +
+      "Use 'Download JSON only' instead and add the id to manifest.json by hand.";
+  } finally {
+    btn.disabled = false;
+    btn.textContent = originalLabel;
+  }
 });
 </script>
 </body>
