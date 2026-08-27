@@ -1,0 +1,44 @@
+{
+  "id": "daim-cheesecake",
+  "title": "Daim Cheesecake",
+  "subtitle": "Easy delicious no-bake Daim Cheesecake",
+  "category": "Dessert",
+  "tabColor": "rust",
+  "image": "images/daim-cheesecake.webp",
+  "servings": "8",
+  "prepTime": "20 min",
+  "restTime": "5 hours",
+  "description": "Easy recipe for homemade Daim cheesecake with only 7 ingredients. Easy Daim cheesecake which is quick to make.",
+  "sections": [
+    {
+      "name": "Biscuit base",
+      "ingredients": [
+        "220g Digestive Biscuits",
+        "100g Butter"
+      ],
+      "steps": [
+        "Start by crushing your digestive biscuits. Tip: put your biscuits in a plastic bag and hit them with something hard: meat mallet, rolling pin, etc.",
+        "Melt butter (in a pot, or microwave). Mix your crumbled biscuits with the melted butter.",
+        "Get your springform pan ready. Find a springform pan. Line the bottom with baking paper.",
+        "Pour your biscuit and butter mixture into the springform pan and press it down well and out to the sides. Rest in the fridge as you make the cheese filling."
+      ]
+    },
+    {
+      "name": "Cream cheese filling",
+      "ingredients": [
+        "200 g. natural cream cheese",
+        "4 dl. whipping cream",
+        "75 g. powdered sugar",
+        "2 tsp. vanilla sugar",
+        "4 pcs. Daim"
+      ],
+      "steps": [
+        "Put all the ingredients (except Daim) for the filling in a bowl and beat with an electric whisk until the entire mixture turns into a uniform, firm cream.",
+        "Chop the Daim and fold it into the cream (save a little for garnish).",
+        "Refrigerate the cake for at least 5 hours, but preferably overnight. And voila!"
+      ]
+    }
+  ],
+  "tip": "",
+  "source": ""
+}
